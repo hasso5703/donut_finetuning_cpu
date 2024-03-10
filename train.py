@@ -140,11 +140,14 @@ def train(config):
     bar = ProgressBar(config)
 
     custom_ckpt = CustomCheckpointIO()
+
     trainer = pl.Trainer(
-        num_nodes=config.get("num_nodes", 1),
-        devices=torch.cuda.device_count(),
-        strategy="ddp",
-        accelerator="gpu",
+        #Comment out the lines above
+        # num_nodes=config.get("num_nodes", 1),
+        # devices=torch.cuda.device_count(),
+        # strategy="dp",
+        # accelerator="gpu",
+        accelerator="cpu", #TODO add this line
         plugins=custom_ckpt,
         max_epochs=config.max_epochs,
         max_steps=config.max_steps,
@@ -157,7 +160,10 @@ def train(config):
         callbacks=[lr_callback, checkpoint_callback, bar],
     )
 
+
+
     trainer.fit(model_module, data_module, ckpt_path=config.get("resume_from_checkpoint_path", None))
+    trainer.save_checkpoint(f"{Path(config.result_path)}/{config.exp_name}/{config.exp_version}/model_checkpoint.ckpt")
 
 
 if __name__ == "__main__":
