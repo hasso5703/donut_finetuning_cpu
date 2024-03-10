@@ -147,7 +147,7 @@ def train(config):
         # devices=torch.cuda.device_count(),
         # strategy="dp",
         # accelerator="gpu",
-        accelerator="cpu", #TODO add this line
+        accelerator="cpu",
         plugins=custom_ckpt,
         max_epochs=config.max_epochs,
         max_steps=config.max_steps,
